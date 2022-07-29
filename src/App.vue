@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import data from './data.json'
+import data from './data.json'//数据源
 import { ref, provide } from 'vue'
 import Editor from './packages/editor'
 import { registerConfig as config } from './utils/editor-config'
