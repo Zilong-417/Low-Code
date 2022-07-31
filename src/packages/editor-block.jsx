@@ -20,6 +20,8 @@ export default defineComponent({
                 props.block.top = props.block.top - offsetHeight / 2
                 props.block.alignCenter = false
             }
+            props.block.width = offsetWidth
+            props.block.height = offsetHeight
         })
         return () => {
             const component = config.componentMap[props.block.key]
