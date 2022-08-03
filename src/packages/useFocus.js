@@ -1,12 +1,10 @@
 import { computed, ref } from 'vue'
-export function useFocus(data, callback) {
+export function useFocus(data, previewRef, callback) {
 
     const selectIndex = ref(-1)//表示没有任何一个被选中
 
     //最后选择的哪一个
     const lastSelectBlock = computed(() => data.value.blocks[selectIndex.value])
-
-
 
     const focusData = computed(() => {
         let focus = []
@@ -18,6 +16,7 @@ export function useFocus(data, callback) {
         data.value.blocks.forEach(block => block.focus = false)
     }
     const blockMousedown = (e, block, index) => {
+        if (previewRef.value) return;
         e.preventDefault()
         e.stopPropagation()
         //block上我们规划一个属性focus获取焦点后就将focus变成true
@@ -38,10 +37,11 @@ export function useFocus(data, callback) {
     }
     //实现拖拽多个元素
     const containerMousedown = () => {
+        if (previewRef.value) return;
         clearBlockFocus()
         selectIndex.value = -1
     }
     return {
-        blockMousedown, focusData, containerMousedown, lastSelectBlock
+        blockMousedown, focusData, containerMousedown, lastSelectBlock, clearBlockFocus
     }
 }
