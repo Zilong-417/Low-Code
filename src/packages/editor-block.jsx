@@ -2,7 +2,8 @@ import { computed, defineComponent, inject, onMounted, ref } from "vue";
 
 export default defineComponent({
     props: {
-        block: { type: Object }
+        block: { type: Object },
+        formData: { type: Object }
     },
     setup(props) {
         const blockStyle = computed(() => ({
@@ -24,8 +25,20 @@ export default defineComponent({
             props.block.height = offsetHeight
         })
         return () => {
-            const component = config.componentMap[props.block.key]
-            const RenderComponent = component.render()
+            // 通过block的key属性直接获取对应的组件 
+            const component = config.componentMap[props.block.key];
+            // 获取render函数
+            const RenderComponent = component.render({
+                props: props.block.props,
+                model: Object.keys(component.model || {}).reduce((prev, modelName) => {
+                    let propName = props.block.model[modelName]; // 'username'
+                    prev[modelName] = {
+                        modelValue: props.formData[propName], // zfjg
+                        "onUpdate:modelValue": v => props.formData[propName] = v
+                    }
+                    return prev;
+                }, {})
+            })
             return <div class="editor-block" style={blockStyle.value} ref={blockRef}>
                 {RenderComponent}
             </div>

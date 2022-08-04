@@ -7,15 +7,19 @@ import { useFocus } from "./useFocus";
 import { useBlockDragger } from "./useBlockDragger";
 import { useCommand } from "./useCommand";
 import { $dialog } from "../components/Dialog";
-import { ElButton } from 'element-plus';
+import { ElButton, ElCard } from 'element-plus';
+import EditorOperator from "./editor-operator";
 
 export default defineComponent({
     props: {
-        modelValue: { type: Object }
+        modelValue: { type: Object },
+        formData: { type: Object }
     },
     components: {
         editorBlock,
-        ElButton
+        ElButton,
+        ElCard,
+        EditorOperator
     },
     //要触发的事件
     emits: ['update:modelValue'],
@@ -82,21 +86,34 @@ export default defineComponent({
                             onDragstart={e => dragstart(e, component)}
                             onDragend={dragend} >
                             <span>{component.lable}</span>
-                            <div>{component.preview()}</div>
+                            <div >{component.preview()}</div>
                         </div>
                     ))}
                 </div>
                 <div class="editor-top">
                     {buttons.map((btn, index) => {
-                        const icon = typeof btn.icon == 'function' ? btn.icon() : btn.icon
                         const label = typeof btn.label == 'function' ? btn.label() : btn.label
-                        return <div class="editor-top-button" onClick={btn.handler}>
-                            <i class={icon}></i>
+                        return <el-button plain class="editor-top-button" onClick={btn.handler}>
                             <span>{label}</span>
-                        </div>
+                        </el-button >
                     })}
                 </div>
-                <div class="editor-right">属性控制栏目</div>
+                <div class="editor-right">
+                    <div class="editor-right-title">
+                        <el-card shadow="never">
+                            <span>画布属性</span>
+                        </el-card>
+                        <el-card shadow="never" class="editor-right-title-box">
+                            <EditorOperator
+                                block={lastSelectBlock.value}
+                                data={data.value}
+                                updateContainer={commands.updateContainer}
+                                updateBlock={commands.updateBlock}
+                                style="padding:0px;"
+                            ></EditorOperator>
+                        </el-card>
+                    </div>
+                </div>
                 <div class="editor-container">
                     <div class="editor-container-canvas">
                         <div class="editor-container-canvas_content"
@@ -110,6 +127,7 @@ export default defineComponent({
                                             [block.focus ? 'editor-block-focus' : '', previewRef.value ? 'editor-block-preview' : '']}
                                         onMousedown={(e) => blockMousedown(e, block, index)}
                                         block={block}
+                                        formData={props.formData}
                                     ></editorBlock>
                                 )))
                             }
@@ -119,8 +137,6 @@ export default defineComponent({
                     </div>
                 </div>
                 <div class={previewRef.value ? 'bg' : 'editor-block-preview-bg'}>
-
-
                     <div class="canvas-container">
                         {buttons.map((btn, index) => {
                             return <el-button class="close" type="danger" round onClick={btn.handler} >关闭</el-button>
@@ -135,6 +151,7 @@ export default defineComponent({
                                             [block.focus ? 'editor-block-focus' : '', previewRef.value ? 'editor-block-preview' : '']}
                                         onMousedown={(e) => blockMousedown(e, block, index)}
                                         block={block}
+                                        formData={props.formData}
                                     ></editorBlock>
                                 )))
                             }

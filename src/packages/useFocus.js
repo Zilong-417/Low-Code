@@ -22,7 +22,7 @@ export function useFocus(data, previewRef, callback) {
         //block上我们规划一个属性focus获取焦点后就将focus变成true
         if (e.shiftKey) {
             if (focusData.value.focus.length <= 1) {
-                block.focus = true//当前只有一个节点被选中时 摁住shift键也不会雀环focus状态
+                block.focus = true//当前只有一个节点被选中时 摁住shift键也不会focus状态
             } else {
                 block.focus = !block.focus
             }

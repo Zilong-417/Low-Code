@@ -19,7 +19,9 @@ export function useMenuDragger(containerRef, data) {
                     left: e.offsetX,
                     zIndex: 1,
                     key: currentComponent.key,
-                    alignCenter: true
+                    alignCenter: true,
+                    props: {},
+                    model: {}
                 }
             ]
         }

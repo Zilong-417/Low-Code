@@ -48,10 +48,10 @@ export function useCommand(data, focusData) {
                         })
                         return
                     }; // 没有可以撤销的了
-                    let item = state.queue[state.current + 1]; // 找到当前的下一步还原操作
+                    let item = state.queue[state.current + 1] // 找到当前的下一步还原操作
                     if (item) {
-                        item.redo && item.redo();
-                        state.current++;
+                        item.redo && item.redo()
+                        state.current++
                     }
                 }
             }
@@ -71,15 +71,15 @@ export function useCommand(data, focusData) {
                         })
                         return
                     }; // 没有可以撤销的了
-                    let item = state.queue[state.current]; // 找到上一步还原
+                    let item = state.queue[state.current] // 找到上一步还原
                     if (item) {
-                        item.undo && item.undo(); // 这里没有操作队列
-                        state.current--;
+                        item.undo && item.undo()// 这里没有操作队列
+                        state.current--
                     }
                 }
             }
         }
-    });
+    })
     registry({ // 如果希望将操作放到队列中可以增加一个属性 标识等会操作要放到队列中
         name: 'drag',
         pushQueue: true,
@@ -112,7 +112,7 @@ export function useCommand(data, focusData) {
                 }
             }
         }
-    });
+    })
 
     registry({// 删除操作
         name: 'delete', // 删除
@@ -177,23 +177,70 @@ export function useCommand(data, focusData) {
             }
         }
     })
+
+    // 带有历史记录常用的模式 
+    registry({
+        name: 'updateContainer', // 更新整个容器
+        pushQueue: true,
+        execute(newValue) {
+            let state = {
+                before: data.value, // 当前的值
+                after: newValue // 新值
+            }
+            return {
+                redo: () => {
+                    data.value = state.after
+                },
+                undo: () => {
+                    data.value = state.before
+                }
+            }
+        }
+    })
+
+    registry({
+        name: 'updateBlock', // 更新某个组件
+        pushQueue: true,
+        execute(newBlock, oldBlock) {
+            let state = {
+                before: data.value.blocks,
+                after: (() => {
+                    let blocks = [...data.value.blocks] // 拷贝一份用于新的block
+                    const index = data.value.blocks.indexOf(oldBlock) // 找老的 需要通过老的查找
+                    if (index > -1) {
+                        blocks.splice(index, 1, newBlock)
+                    }
+                    return blocks
+                })()
+            }
+            return {
+                redo: () => {
+                    data.value = { ...data.value, blocks: state.after }
+                },
+                undo: () => {
+                    data.value = { ...data.value, blocks: state.before }
+                }
+            }
+        }
+    })
+
     const keyboardEvent = (() => {
         const keyCodes = {
             90: 'z',
             89: 'y'
         }
         const onKeydown = (e) => {
-            const { ctrlKey, keyCode } = e; // ctrl+z  / ctrl+y
-            let keyString = [];
-            if (ctrlKey) keyString.push('ctrl');
-            keyString.push(keyCodes[keyCode]);
-            keyString = keyString.join('+');
+            const { ctrlKey, keyCode } = e// ctrl+z  / ctrl+y
+            let keyString = []
+            if (ctrlKey) keyString.push('ctrl')
+            keyString.push(keyCodes[keyCode])
+            keyString = keyString.join('+')
 
             state.commandArray.forEach(({ keyboard, name }) => {
                 if (!keyboard) return; // 没有键盘事件
                 if (keyboard === keyString) {
-                    state.commands[name]();
-                    e.preventDefault();
+                    state.commands[name]()
+                    e.preventDefault()
                 }
             })
         }
@@ -204,16 +251,16 @@ export function useCommand(data, focusData) {
             }
         }
         return init
-    })();
-    //匿名函数（立即执行函数）
-    (() => {
-        // 监听键盘事件
-        state.destroyArray.push(keyboardEvent())
-        state.commandArray.forEach(command => command.init && state.destroyArray.push(command.init()))
-    })();
+    })()
+        //匿名函数（立即执行函数）
+        (() => {
+            // 监听键盘事件
+            state.destroyArray.push(keyboardEvent())
+            state.commandArray.forEach(command => command.init && state.destroyArray.push(command.init()))
+        })()
 
     onUnmounted(() => { // 清理绑定的事件
         state.destroyArray.forEach(fn => fn && fn());
     })
-    return state;
+    return state
 }
