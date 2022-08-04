@@ -10,11 +10,13 @@
         bottom: 0;
     }
 
+    /*左侧栏*/
     &-left {
         left: 0;
+        margin-top: 60px;
 
         &-item {
-            width: 250px;
+            width: 270px;
             margin: 20px auto;
             display: flex;
             justify-content: center;
@@ -51,21 +53,32 @@
         }
     }
 
+    /*右侧栏*/
     &-right {
         right: 0;
+        margin-top: 80px;
+
+        &-title {
+            text-align: center;
+
+            &-box {
+                height: 550px;
+                margin-top: 2px;
+            }
+        }
     }
 
+    /*上侧栏*/
     &-top {
         position: absolute;
         right: 280px;
         left: 280px;
-        height: 80px;
+        height: 70px;
         display: flex;
         justify-content: center;
         align-items: center;
 
         &-button {
-            width: 80px;
             height: 60px;
             display: flex;
             flex-direction: column;
@@ -83,8 +96,9 @@
         }
     }
 
+    /*中间栏*/
     &-container {
-        padding: 80px 270px 0;
+        padding: 80px 290px 0;
         height: 100%;
         box-sizing: border-box;
 
@@ -93,8 +107,8 @@
             height: 100%;
 
             &_content {
-                margin: 20px auto;
-                background-color: #ccc;
+                margin: 0 auto;
+                background-color: #F5F5F5;
                 position: relative;
             }
         }
@@ -114,18 +128,21 @@
     }
 }
 
+/*点击后样式*/
 .editor-block-focus {
     &::after {
         border: 3px dashed skyblue;
     }
 }
 
+/*点击前样式*/
 .editor-block-preview {
     &::after {
         display: none;
     }
 }
 
+/*辅助线*/
 .line-x {
     position: absolute;
     top: 0;
@@ -140,7 +157,7 @@
     border-top: 1px dashed red;
 }
 
-
+/*预览遮罩层*/
 .bg {
     width: 100%;
     height: 100%;
@@ -168,8 +185,8 @@
     }
 
     .close {
-        z-index: 20;
         position: absolute;
+        z-index: 20;
         right: 21%;
         top: 9%;
     }
@@ -177,4 +194,17 @@
 
 .editor-block-preview-bg {
     display: none;
+}
+
+/*链接输入框*/
+#prepend {
+    display: flex;
+    justify-content: space-between;
+
+    div {
+        width: 50px;
+        margin-right: 5px;
+        font-size: 15px;
+    }
+
 }

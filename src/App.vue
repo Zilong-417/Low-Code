@@ -1,27 +1,34 @@
 <template>
   <div class="app">
-    <editor v-model="state"></editor>
+    <Editor v-model="state" :formData="formData"></Editor>
   </div>
 </template>
 
 <script>
-import data from './data.json'//数据源
-import { ref, provide } from 'vue'
-import Editor from './packages/editor'
-import { registerConfig as config } from './utils/editor-config'
-
+import { ref, provide } from 'vue';
+import data from './data.json';
+import Editor from './packages/editor';
+import { registerConfig as config } from './utils/editor-config';
 export default {
   components: {
     Editor
   },
   setup() {
     const state = ref(data);
-    provide('config', config)
+    provide('config', config); // 将组件的配置直接传值
+
+    const formData = ref({
+      username: 'hahaha',
+      password: 123456,
+    })
+
     return {
-      state
+      state,
+      formData
     }
   }
 }
+
 </script>
 
 <style lang="scss">
