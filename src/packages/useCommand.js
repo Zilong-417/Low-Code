@@ -32,7 +32,7 @@ export function useCommand(data, focusData) {
         }
     }
     // 注册需要的命令
-    registry({
+    registry({//还原操作
         name: 'redo',
         keyboard: 'ctrl+y',
         execute() {
@@ -47,7 +47,7 @@ export function useCommand(data, focusData) {
                             type: 'warning',
                         })
                         return
-                    }; // 没有可以撤销的了
+                    }; // 没有可以还原的了
                     let item = state.queue[state.current + 1] // 找到当前的下一步还原操作
                     if (item) {
                         item.redo && item.redo()
@@ -155,7 +155,7 @@ export function useCommand(data, focusData) {
         execute() {
             let state = {
                 before: deepcopy(data.value.blocks), // 当前的值
-                after: focusData.value.unfocused && focusData.value.focus
+                after: []
             }
             return {
                 redo: () => {
@@ -253,14 +253,14 @@ export function useCommand(data, focusData) {
         return init
     })()
         //匿名函数（立即执行函数）
-        (() => {
+        ; (() => {
             // 监听键盘事件
             state.destroyArray.push(keyboardEvent())
             state.commandArray.forEach(command => command.init && state.destroyArray.push(command.init()))
         })()
 
     onUnmounted(() => { // 清理绑定的事件
-        state.destroyArray.forEach(fn => fn && fn());
+        state.destroyArray.forEach(fn => fn && fn())
     })
     return state
 }

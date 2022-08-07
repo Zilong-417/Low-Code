@@ -52,10 +52,9 @@ registerConfig.register({
             { label: '文本', value: 'text' },
         ]),
         size: createSelectProp('按钮尺寸', [
-            { label: '默认', value: '' },
-            { label: '中等', value: 'medium' },
-            { label: '小', value: 'small' },
-            { label: '极小', value: 'mini' },
+            { label: '默认', value: 'default' },
+            { label: '大', value: 'large' },
+            { label: '小', value: 'small' }
         ])
     }
 })
@@ -76,7 +75,7 @@ registerConfig.register({
 registerConfig.register({
     lable: '链接',
     preview: () => <ElLink>预览链接</ElLink>,
-    render: ({ props, size }) => <ElLink type={props.type} size={props.size} href={'https:' + props.link} target="_blank">{props.text || '链接'}</ElLink>,
+    render: ({ props, size }) => <ElLink type={props.type} underline={props.underline} disabled={props.disabled} href={'https:' + props.link} target="_blank">{props.text || '链接'}</ElLink>,
     key: 'link',
     props: {
         text: createInputProp('链接名字'),
@@ -89,11 +88,13 @@ registerConfig.register({
             { label: '危险', value: 'danger' },
             { label: '文本', value: 'info' },
         ]),
-        size: createSelectProp('链接尺寸', [
-            { label: '默认', value: '' },
-            { label: '中等', value: 'medium' },
-            { label: '小', value: 'small' },
-            { label: '极小', value: 'mini' },
-        ])
+        underline: createSelectProp('是否下划线', [
+            { label: '是', value: true },
+            { label: '否', value: false },
+        ]),
+        disabled: createSelectProp('是否禁用', [
+            { label: '是', value: true },
+            { label: '否', value: false },
+        ]),
     }
 })

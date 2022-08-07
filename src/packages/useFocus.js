@@ -5,7 +5,7 @@ export function useFocus(data, previewRef, callback) {
 
     //最后选择的哪一个
     const lastSelectBlock = computed(() => data.value.blocks[selectIndex.value])
-
+    console.log(lastSelectBlock)
     const focusData = computed(() => {
         let focus = []
         let unfocused = []
@@ -14,6 +14,12 @@ export function useFocus(data, previewRef, callback) {
     })
     const clearBlockFocus = () => {
         data.value.blocks.forEach(block => block.focus = false)
+    }
+    //实现拖拽多个元素
+    const containerMousedown = () => {
+        if (previewRef.value) return;
+        clearBlockFocus()
+        selectIndex.value = -1
     }
     const blockMousedown = (e, block, index) => {
         if (previewRef.value) return;
@@ -35,13 +41,12 @@ export function useFocus(data, previewRef, callback) {
         selectIndex.value = index
         callback(e)
     }
-    //实现拖拽多个元素
-    const containerMousedown = () => {
-        if (previewRef.value) return;
-        clearBlockFocus()
-        selectIndex.value = -1
-    }
+
     return {
-        blockMousedown, focusData, containerMousedown, lastSelectBlock, clearBlockFocus
+        blockMousedown,
+        containerMousedown,
+        focusData,
+        lastSelectBlock,
+        clearBlockFocus
     }
 }
