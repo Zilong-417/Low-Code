@@ -22,7 +22,7 @@ export default defineComponent({
                 state.editData = deepcopy(props.data.container)
             } else {
                 state.editData = deepcopy(props.block)
-                console.log(props.block)
+                //console.log(props.block)
             }
         }
         //应用按钮点击事件

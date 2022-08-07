@@ -35,24 +35,24 @@ export default defineComponent({
                 ctx.emit('update:modelValue', deepcopy(newValue))
             }
         });
+        //内容区大小
         const containerStyles = computed(() => ({
             width: data.value.container.width + 'px',
             height: data.value.container.height + 'px'
         }))
         const config = inject('config')
 
-        const containerRef = ref(null)
+        const containerRef = ref(null);
+        // 1.实现菜单的拖拽功能
+        const { dragstart, dragend } = useMenuDragger(containerRef, data);
 
-        //1.实现菜单的拖拽
-        const { dragstart, dragend } = useMenuDragger(containerRef, data)
-
-        //2.实现获取焦点，选中后可能直接就进行拖拽
-        let { blockMousedown, focusData, containerMousedown, lastSelectBlock, clearBlockFocus } =
-            useFocus(data, previewRef, (e) => {
-                mousedown(e)
-            })
-        //实现组件拖拽
-        let { mousedown, markLine } = useBlockDragger(focusData, lastSelectBlock, data)
+        // 2.实现获取焦点 选中后可能直接就进行拖拽了
+        let { blockMousedown, focusData, containerMousedown, lastSelectBlock, clearBlockFocus } = useFocus(data, previewRef, (e) => {
+            // 获取焦点后进行拖拽
+            mousedown(e)
+        });
+        // 2.实现组件拖拽
+        let { mousedown, markLine } = useBlockDragger(focusData, lastSelectBlock, data);
 
         const { commands } = useCommand(data, focusData); // 引入
         const buttons = [
@@ -124,13 +124,15 @@ export default defineComponent({
                                 (data.value.blocks.map((block, index) => (
                                     <editorBlock
                                         class={
-                                            [block.focus ? 'editor-block-focus' : '', previewRef.value ? 'editor-block-preview' : '']}
-                                        onMousedown={(e) => blockMousedown(e, block, index)}
+                                            [block.focus ? 'editor-block-focus' : '',
+                                            previewRef.value ? 'editor-block-preview' : '']}
                                         block={block}
+                                        onMousedown={(e) => blockMousedown(e, block, index)}
                                         formData={props.formData}
                                     ></editorBlock>
                                 )))
                             }
+
                             {markLine.x !== null && <div class="line-x" style={{ left: markLine.x + 'px' }}></div>}
                             {markLine.y !== null && <div class="line-y" style={{ top: markLine.y + 'px' }}></div>}
                         </div>

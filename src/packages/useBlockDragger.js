@@ -16,8 +16,8 @@ export function useBlockDragger(focusData, lastSelectBlock, data) {
         const { width: BWidth, height: BHeight } = lastSelectBlock.value
         dragState = {
             startX: e.clientX,
-            startY: e.clientY,
-            startLeft: lastSelectBlock.value.left, // b点拖拽前的位置 left 和 top
+            startY: e.clientY, // 记录每一个选中的位置
+            startLeft: lastSelectBlock.value.left, // b点拖拽前的位置 left和top
             startTop: lastSelectBlock.value.top,
             dragging: false,
             startPos: focusData.value.focus.map(({ top, left }) => ({ top, left })),
@@ -34,21 +34,19 @@ export function useBlockDragger(focusData, lastSelectBlock, data) {
                     width: data.value.container.width,
                     height: data.value.container.height
                 }].forEach((block) => {
-                    const { top: ATop, left: ALeft, width: AWidth, height: AHeight } = block
-                    // 此元素拖拽到和A元素top一致的时候，要显示这根辅助线，辅助线的位置就是ATop
-                    // showTop线的位置 top移动模块位置
-                    lines.y.push({ showTop: ATop, top: ATop }) // 顶对顶
+                    const { top: ATop, left: ALeft, width: AWidth, height: AHeight } = block;
+                    // 当此元素拖拽到和A元素top一致的时候，要显示这根辅助线，辅助线的位置就是ATop
+                    lines.y.push({ showTop: ATop, top: ATop })
                     lines.y.push({ showTop: ATop, top: ATop - BHeight }) // 顶对底
                     lines.y.push({ showTop: ATop + AHeight / 2, top: ATop + AHeight / 2 - BHeight / 2 }) // 中对中
-                    lines.y.push({ showTop: ATop + AHeight, top: ATop + AHeight })// 底对顶
-                    lines.y.push({ showTop: ATop + AHeight, top: ATop + AHeight - BHeight }) // 底对底
-
-                    lines.x.push({ showLeft: ALeft, left: ALeft }) // 左对左
-                    lines.x.push({ showLeft: ALeft + AWidth, left: ALeft + AWidth }) // 右对左
-                    lines.x.push({ showLeft: ALeft + AWidth / 2, left: ALeft + AWidth / 2 - BWidth / 2 }) // 中对中
-                    lines.x.push({ showLeft: ALeft + AWidth, left: ALeft + AWidth - BWidth }) // 右对右
+                    lines.y.push({ showTop: ATop + AHeight, top: ATop + AHeight }) // 底对顶
+                    lines.y.push({ showTop: ATop + AHeight, top: ATop + AHeight - BHeight }); // 底对底
+                    lines.x.push({ showLeft: ALeft, left: ALeft }) // 左对左边
+                    lines.x.push({ showLeft: ALeft + AWidth, left: ALeft + AWidth })// 右边对左边
+                    lines.x.push({ showLeft: ALeft + AWidth / 2, left: ALeft + AWidth / 2 - BWidth / 2 })
+                    lines.x.push({ showLeft: ALeft + AWidth, left: ALeft + AWidth - BWidth })
                     lines.x.push({ showLeft: ALeft, left: ALeft - BWidth }) // 左对右
-                })
+                });
                 return lines
             })()
         }
@@ -68,7 +66,8 @@ export function useBlockDragger(focusData, lastSelectBlock, data) {
         let top = moveY - dragState.startY + dragState.startTop
 
         // 先计算横线 距离参照物元素还有5px的时候，显示
-        let y = null, x = null
+        let y = null
+        let x = null
         for (let i = 0; i < dragState.lines.y.length; i++) {
             const { top: t, showTop: s } = dragState.lines.y[i]
             if (Math.abs(t - top) < 5) { // 小于5说明接近了
