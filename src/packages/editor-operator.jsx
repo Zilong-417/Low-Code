@@ -1,6 +1,6 @@
-import { defineComponent, inject, watch, reactive } from "vue";
-import { ElForm, ElFormItem, ElButton, ElInputNumber, ElColorPicker, ElSelect, ElOption, ElInput, } from 'element-plus'
-import deepcopy from "deepcopy";
+import { defineComponent, inject, watch, reactive, ref } from "vue";
+import { ElForm, ElFormItem, ElButton, ElInputNumber, ElColorPicker, ElSelect, ElOption, ElInput, ElUpload, ElImage } from 'element-plus'
+import deepcopy from "deepcopy"
 import './editor.scss'
 
 export default defineComponent({
@@ -8,9 +8,9 @@ export default defineComponent({
         block: { type: Object }, // 用户最后选中的元素
         data: { type: Object }, // 当前所有的数据
         updateContainer: { type: Function },//更改容器的数据
-        updateBlock: { type: Function }//更改组件的数据
-    },
+        updateBlock: { type: Function },//更改组件的数据
 
+    },
     setup(props, ctx) {
         const config = inject('config')// 组件的配置信息
         const state = reactive({
@@ -34,6 +34,24 @@ export default defineComponent({
             }
 
         }
+        // 上传成功，获取返回的图片地址
+        const handleAvatarSuccess = (res, file) => {
+            state.editData.props['picture'] = URL.createObjectURL(file.raw)
+        }
+        // 上传前，限制的上传图片大小
+        const beforeAvatarUpload = (file) => {
+            const isJPG = file.type === 'image/jpeg';
+            const isLt2M = file.size / 1024 / 1024 < 2;
+
+            if (!isJPG) {
+                this.$message.error('上传图片只能是 JPG 格式!');
+            }
+            if (!isLt2M) {
+                this.$message.error('上传图片大小不能超过 2MB!');
+            }
+            return isJPG && isLt2M;
+        }
+
         watch(() => props.block, reset, { immediate: true })
         return () => {
             let content = []
@@ -63,9 +81,26 @@ export default defineComponent({
                                     <div id="prepend">
                                         <div>Https://</div>
                                         <ElInput v-model={state.editData.props[propName]} style="width:180px"></ElInput>
-                                    </div>
+                                    </div>,
+                                picture: () =>
+                                    <ElUpload
+                                        //此处的接口为网上开放接口，已在vue.config.js文件中配置跨域代理
+                                        action="/dev-api/admin/product/fileUpload"
+                                        show-file-list={false}
+                                        on-success={handleAvatarSuccess}
+                                        before-upload={beforeAvatarUpload}
+                                        v-model={state.editData.props[propName]}
+                                        limit={1}
+                                    >
+                                        <div class="uploader-box">
+                                            <ElImage v-show={state.editData.props['picture']} src={state.editData.props['picture']} class="avatar"></ElImage>
+                                            <ElButton type="success" >{!state.editData.props['picture'] ? '点击上传' : '点击替换'}</ElButton>
+                                        </div>
+
+                                    </ElUpload>
+
                             }[propConfig.type]()}
-                        </ElFormItem>
+                        </ElFormItem >
                     }))
                 }
                 if (component && component.model) {

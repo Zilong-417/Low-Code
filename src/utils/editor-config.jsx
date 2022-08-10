@@ -1,9 +1,10 @@
 //列表区可以显示所有的物料
 //key对应的组件映射关系
-
-import { ElButton, ElInput, ElLink } from 'element-plus'
+import { ElButton, ElInput, ElLink, ElIcon, ElUpload } from 'element-plus'
+//默认图片
+const imgdata = require('@/assets/bg.jpg')
 function createEditorConfig() {
-    const componentList = [];
+    const componentList = []
     const componentMap = {}
     return {
         componentList,
@@ -11,14 +12,16 @@ function createEditorConfig() {
         register: (component) => {
             componentList.push(component);
             componentMap[component.key] = component
+
         }
     }
 }
 export let registerConfig = createEditorConfig();
-const createInputProp = (label) => ({ type: 'input', label });//工厂方法，复用
-const createColorProp = (label) => ({ type: 'color', label });
+const createInputProp = (label) => ({ type: 'input', label })//工厂方法，复用
+const createColorProp = (label) => ({ type: 'color', label })
 const createSelectProp = (label, options) => ({ type: 'select', label, options })
-const createAddressProp = (label) => ({ type: 'link', label });
+const createAddressProp = (label) => ({ type: 'link', label })
+const createPictureProp = (label) => ({ type: 'picture', label })
 
 registerConfig.register({
     lable: '文本',
@@ -40,7 +43,11 @@ registerConfig.register({
 registerConfig.register({
     lable: '按钮',
     preview: () => <ElButton>预览按钮</ElButton>,
-    render: ({ props, size }) => <ElButton type={props.type} size={props.size}>{props.text || '按钮'}</ElButton>,
+    resize: {
+        width: true,
+        height: true
+    },
+    render: ({ props, size }) => <ElButton style={{ height: size.height + 'px', width: size.width + 'px' }} type={props.type} size={props.size}>{props.text || '渲染按钮'}</ElButton>,
     key: 'button',
     props: {
         text: createInputProp('按钮内容'),
@@ -61,8 +68,11 @@ registerConfig.register({
 
 registerConfig.register({
     lable: '输入框',
+    resize: {
+        width: true, // 更改输入框的横向大小
+    },
     preview: () => <ElInput placeholder="预览输入框" ></ElInput>,
-    render: ({ model, props }) => <ElInput placeholder={props.text == null ? '请输入内容' : props.text}  {...model.default}></ElInput>,
+    render: ({ model, props, size }) => <ElInput placeholder={props.text == null ? '请输入内容' : props.text}  {...model.default} style={{ width: size.width + 'px' }}></ElInput>,
     key: 'input',
     model: {
         default: '绑定字段'
@@ -96,5 +106,19 @@ registerConfig.register({
             { label: '是', value: true },
             { label: '否', value: false },
         ]),
+    }
+})
+registerConfig.register({
+    lable: '图片',
+    resize: {
+        width: true,
+        height: true
+    },
+    preview: () => <ElIcon size={30}> <PictureFilled /></ElIcon>,
+    render: ({ props, size }) =>
+        <img src={props.picture ? props.picture : imgdata} class="avatar" style={{ height: size.height + 'px', width: size.width + 'px' }} />,
+    key: 'picture',
+    props: {
+        picture: createPictureProp('图片')
     }
 })
