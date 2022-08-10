@@ -14,9 +14,10 @@
     &-left {
         left: 0;
         margin-top: 60px;
+        overflow: scroll;
 
         &-item {
-            width: 270px;
+            width: 250px;
             margin: 20px auto;
             display: flex;
             justify-content: center;
@@ -79,7 +80,7 @@
         align-items: center;
 
         &-button {
-            height: 60px;
+            height: 40px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -91,7 +92,7 @@
             color: #fff;
 
             &+& {
-                margin-left: 3px
+                margin-left: 4px
             }
         }
     }
@@ -207,4 +208,78 @@
         font-size: 15px;
     }
 
+}
+
+/*放大与缩小*/
+.block-resize {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: none;
+    border: 2px solid #ccc;
+    z-index: 1000;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.block-resize-top {
+    top: -4px;
+    left: calc(50% - 4px)
+}
+
+.block-resize-bottom {
+    bottom: -4px;
+    left: calc(50% - 4px)
+}
+
+.block-resize-left {
+    top: calc(50% - 4px);
+    left: -4px
+}
+
+.block-resize-right {
+    top: calc(50% - 4px);
+    right: -4px
+}
+
+.block-resize-top-left {
+    top: -4px;
+    left: -4px;
+
+}
+
+.block-resize-top-right {
+    top: -4px;
+    right: -4px;
+
+}
+
+.block-resize-bottom-left {
+    bottom: -4px;
+    left: -4px;
+
+}
+
+.block-resize-bottom-right {
+    bottom: -4px;
+    right: -4px;
+}
+
+.el-button,
+.el-input {
+    transition: none;
+}
+
+/*图片组件*/
+.uploader-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+    cursor: pointer;
 }
