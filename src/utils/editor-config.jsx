@@ -22,6 +22,7 @@ const createColorProp = (label) => ({ type: 'color', label })
 const createSelectProp = (label, options) => ({ type: 'select', label, options })
 const createAddressProp = (label) => ({ type: 'link', label })
 const createPictureProp = (label) => ({ type: 'picture', label })
+const createFileProp = (label) => ({type:"file",accept:"video/*",label});
 
 registerConfig.register({
     lable: '文本',
@@ -122,3 +123,54 @@ registerConfig.register({
         picture: createPictureProp('图片')
     }
 })
+
+registerConfig.register({
+    lable: '图片',
+    resize: {
+        width: true,
+        height: true
+    },
+    preview: () => <ElIcon size={30}> <PictureFilled /></ElIcon>,
+    render: ({ props, size }) =>
+        <img src={props.picture ? props.picture : imgdata} class="avatar" style={{ height: size.height + 'px', width: size.width + 'px' }} />,
+    key: 'picture',
+    props: {
+        picture: createPictureProp('图片')
+    }
+})
+registerConfig.register({
+    label: "音频播放器",
+    resize: {
+      width: true,
+      height: true,
+    },
+    preview: () => <video controls src="" height="100" width="200"></video>,
+    render: ({ props, size}) => (
+      console.log(props.width,"@!@!"),
+      <video
+        controls
+        src={props.filePath}
+        style={{ width: (size.width==undefined?props.width:size.width + "px"), height: (size.height==undefined?props.height:size.height + "px")}}
+      >
+         {props.filePath || "视频渲染"}
+      </video>
+    ),
+    key: "video",
+    props: {
+      height: createSelectProp("视频高度", [
+        { label: "50px", value: "50px" },
+        { label: "100px", value: "100px" },
+        { label: "150px", value: "150px" },
+        { label: "200px", value: "200px" },
+        { label: "250px", value: "250px" },
+      ]),
+      width: createSelectProp("视频宽度", [
+        { label: "50px", value: "50px" },
+        { label: "100px", value: "100px" },
+        { label: "150px", value: "150px" },
+        { label: "200px", value: "200px" },
+        { label: "250px", value: "250px" },
+      ]),
+      filePath:createFileProp("视频导入")
+    },
+  });
