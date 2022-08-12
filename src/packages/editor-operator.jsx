@@ -16,6 +16,27 @@ export default defineComponent({
         const state = reactive({
             editData: {}
         })
+
+        let AUDIO = ''
+    //保存视频
+    const updateFace = (e) => {
+      const file = e.target.files[0] || e.dataTransfer.files[0]
+
+      // //转换成base64码
+      // let reader = new FileReader()
+      // reader.readAsDataURL(file)
+      // reader.onload = () => {
+      //   AUDIO = reader.result
+      //   console.log(props.data,"block")
+      //   state.editData.props.filePath = AUDIO
+      //   // console.log(AUDIO,'地址')
+      // }
+      let URL = window.URL || window.webkitURL
+      AUDIO = URL.createObjectURL(file)
+      state.editData.props.filePath = AUDIO
+      console.log(state.editData.props,'地址')
+    }
+
         //重置
         const reset = () => {
             if (!props.block) { // 说明要绑定的是容器的宽度和高度
@@ -97,10 +118,17 @@ export default defineComponent({
                                             <ElButton type="success" >{!state.editData.props['picture'] ? '点击上传' : '点击替换'}</ElButton>
                                         </div>
 
-                                    </ElUpload>
-
+                                    </ElUpload>,
+                                    file:()=> 
+                                    <div>
+                                      <input class="file" type="file" accept="video/*" onchange={updateFace}></input>
+                                      {/* <video class="video" src={AUDIO} controls></video> */}
+                                      {/* <button onClick={console.log(AUDIO,'onclick')}>删除视频</button> */}
+                                    </div>
+                                
                             }[propConfig.type]()}
                         </ElFormItem >
+                        
                     }))
                 }
                 if (component && component.model) {
