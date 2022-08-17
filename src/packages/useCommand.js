@@ -204,6 +204,7 @@ export function useCommand(data, focusData) {
         execute(newBlock, oldBlock) {
             let state = {
                 before: data.value.blocks,
+
                 after: (() => {
                     let blocks = [...data.value.blocks] // 拷贝一份用于新的block
                     const index = data.value.blocks.indexOf(oldBlock) // 找老的 需要通过老的查找
@@ -216,9 +217,11 @@ export function useCommand(data, focusData) {
             return {
                 redo: () => {
                     data.value = { ...data.value, blocks: state.after }
+                    console.log(data.value)
                 },
                 undo: () => {
                     data.value = { ...data.value, blocks: state.before }
+                    console.log(data.value)
                 }
             }
         }
