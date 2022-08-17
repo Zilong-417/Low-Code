@@ -22,21 +22,17 @@ const createColorProp = (label) => ({ type: 'color', label })
 const createSelectProp = (label, options) => ({ type: 'select', label, options })
 const createAddressProp = (label) => ({ type: 'link', label })
 const createPictureProp = (label) => ({ type: 'picture', label })
-const createFileProp = (label) => ({type:"file",accept:"video/*",label});
+const createFileProp = (label) => ({ type: "file", accept: "video/*", label });
 
 registerConfig.register({
     lable: '文本',
     preview: () => '预览文本',
-    render: ({ props }) => <span style={{ color: props.color, fontSize: props.size }}>{props.text || '文本'}</span>,
+    render: ({ props }) => <span style={{ color: props.color, fontSize: props.size + 'px' }}>{props.text || '文本'}</span>,
     key: 'text',
     props: {
         text: createInputProp('文本内容'),
         color: createColorProp('字体颜色'),
-        size: createSelectProp('字体大小', [
-            { label: '14px', value: '14px' },
-            { label: '20px', value: '20px' },
-            { label: '24px', value: '24px' },
-        ])
+        size: createInputProp('字体大小/px')
 
     }
 })
@@ -48,10 +44,11 @@ registerConfig.register({
         width: true,
         height: true
     },
-    render: ({ props, size }) => <ElButton style={{ height: size.height + 'px', width: size.width + 'px' }} type={props.type} size={props.size}>{props.text || '渲染按钮'}</ElButton>,
+    render: ({ props, size }) => <ElButton style={{ height: size.height + 'px', width: size.width + 'px', fontSize: props.fontsize + 'px' }} type={props.type} size={props.size}>{props.text || '按钮'}</ElButton>,
     key: 'button',
     props: {
         text: createInputProp('按钮内容'),
+        fontsize: createInputProp('字体大小/px'),
         type: createSelectProp('按钮类型', [
             { label: '基础', value: 'primary' },
             { label: '成功', value: 'success' },
@@ -86,11 +83,12 @@ registerConfig.register({
 registerConfig.register({
     lable: '链接',
     preview: () => <ElLink>预览链接</ElLink>,
-    render: ({ props, size }) => <ElLink type={props.type} underline={props.underline} disabled={props.disabled} href={'https:' + props.link} target="_blank">{props.text || '链接'}</ElLink>,
+    render: ({ props, size }) => <ElLink type={props.type} underline={props.underline} disabled={props.disabled} href={'https:' + props.link} target="_blank" style={{ fontSize: props.fontSize + 'px' }}>{props.text || '链接'}</ElLink>,
     key: 'link',
     props: {
         text: createInputProp('链接名字'),
         link: createAddressProp('链接地址'),
+        fontSize: createInputProp('字体大小/px'),
         type: createSelectProp('链接类型', [
             { label: '默认', value: 'default' },
             { label: '基础', value: 'primary' },
@@ -117,60 +115,65 @@ registerConfig.register({
     },
     preview: () => <ElIcon size={30}> <PictureFilled /></ElIcon>,
     render: ({ props, size }) =>
-        <img src={props.picture ? props.picture : imgdata} class="avatar" style={{ height: size.height + 'px', width: size.width + 'px' }} />,
+        <img
+            src={props.picture ? props.picture : imgdata}
+            class="avatar"
+            style={{ width: (size.width == undefined ? props.width : size.width + 'px'), height: (size.height == undefined ? props.height : size.height + 'px') }}
+        />,
     key: 'picture',
     props: {
-        picture: createPictureProp('图片')
+        height: createSelectProp("图片高度", [
+            { label: "50px", value: "50px" },
+            { label: "100px", value: "100px" },
+            { label: "150px", value: "150px" },
+            { label: "200px", value: "200px" },
+            { label: "250px", value: "250px" },
+        ]),
+        width: createSelectProp("图片宽度", [
+            { label: "50px", value: "50px" },
+            { label: "100px", value: "100px" },
+            { label: "150px", value: "150px" },
+            { label: "200px", value: "200px" },
+            { label: "250px", value: "250px" },
+        ]),
+        picture: createPictureProp('图片导入')
     }
 })
-
 registerConfig.register({
-    lable: '图片',
+    lable: "音频播放器",
     resize: {
         width: true,
-        height: true
+        height: true,
     },
-    preview: () => <ElIcon size={30}> <PictureFilled /></ElIcon>,
-    render: ({ props, size }) =>
-        <img src={props.picture ? props.picture : imgdata} class="avatar" style={{ height: size.height + 'px', width: size.width + 'px' }} />,
-    key: 'picture',
-    props: {
-        picture: createPictureProp('图片')
-    }
-})
-registerConfig.register({
-    label: "音频播放器",
-    resize: {
-      width: true,
-      height: true,
-    },
-    preview: () => <video controls src="" height="100" width="200"></video>,
-    render: ({ props, size}) => (
-      console.log(props.width,"@!@!"),
-      <video
-        controls
-        src={props.filePath}
-        style={{ width: (size.width==undefined?props.width:size.width + "px"), height: (size.height==undefined?props.height:size.height + "px")}}
-      >
-         {props.filePath || "视频渲染"}
-      </video>
+    // preview: () => <video controls src="" height="100" width="200"></video>,
+    preview: () => <ElIcon size={30}><VideoCameraFilled /></ElIcon>,
+    render: ({ props, size }) => (
+        //console.log(size.width, "@!@!"),
+        //console.log(props),
+        <video video
+            controls
+            src={props.filePath}
+            style={{ width: (size.width == undefined ? props.width : size.width + 'px'), height: (size.height == undefined ? props.height : size.height + 'px') }}
+        >
+            {props.filePath || "视频渲染"}
+        </video >
     ),
     key: "video",
     props: {
-      height: createSelectProp("视频高度", [
-        { label: "50px", value: "50px" },
-        { label: "100px", value: "100px" },
-        { label: "150px", value: "150px" },
-        { label: "200px", value: "200px" },
-        { label: "250px", value: "250px" },
-      ]),
-      width: createSelectProp("视频宽度", [
-        { label: "50px", value: "50px" },
-        { label: "100px", value: "100px" },
-        { label: "150px", value: "150px" },
-        { label: "200px", value: "200px" },
-        { label: "250px", value: "250px" },
-      ]),
-      filePath:createFileProp("视频导入")
+        height: createSelectProp("视频高度", [
+            { label: "50px", value: "50px" },
+            { label: "100px", value: "100px" },
+            { label: "150px", value: "150px" },
+            { label: "200px", value: "200px" },
+            { label: "250px", value: "250px" },
+        ]),
+        width: createSelectProp("视频宽度", [
+            { label: "50px", value: "50px" },
+            { label: "100px", value: "100px" },
+            { label: "150px", value: "150px" },
+            { label: "200px", value: "200px" },
+            { label: "250px", value: "250px" },
+        ]),
+        filePath: createFileProp("视频导入")
     },
-  });
+});

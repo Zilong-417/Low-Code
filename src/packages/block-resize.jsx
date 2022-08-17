@@ -5,29 +5,30 @@ export default defineComponent({
         block: { type: Object },
         component: { type: Object }
     },
-    setup(props) {
+
+    setup(props, ctx) {
         const { width, height } = props.component.resize || {}
         let data = {}
         const onmousemove = (e) => {
-            let {clientX,clientY} = e;
-            let {startX,startY,startWidth,startHeight,startLeft,startTop,direction} = data;
+            let { clientX, clientY } = e;
+            let { startX, startY, startWidth, startHeight, startLeft, startTop, direction } = data;
 
-            
-            if(direction.horizontal == 'center'){  // 如果拖拽的是 中间的点 X轴是不变的
+
+            if (direction.horizontal == 'center') {  // 如果拖拽的是 中间的点 X轴是不变的
                 clientX = startX
             }
-            if(direction.vertical == 'center'){  // 只能改横向 纵向是不发生变化的
+            if (direction.vertical == 'center') {  // 只能改横向 纵向是不发生变化的
                 clientY = startY
             }
 
             let durX = clientX - startX;
             let durY = clientY - startY;
 
-            if(direction.vertical == 'start'){ // 针对反向拖拽的点 需要取反，拿到正确的组件top和left
+            if (direction.vertical == 'start') { // 针对反向拖拽的点 需要取反，拿到正确的组件top和left
                 durY = -durY
                 props.block.top = startTop - durY
             }
-            if(direction.horizontal == 'start'){
+            if (direction.horizontal == 'start') {
                 durX = -durX
                 props.block.left = startLeft - durX
             }
@@ -64,25 +65,25 @@ export default defineComponent({
             {width && <>
                 <div class="block-resize block-resize-left"
                     onMousedown={e => onmousedown(e, { horizontal: 'start', vertical: 'center' })}></div>
-                <div class="block-resize block-resize-right" 
+                <div class="block-resize block-resize-right"
                     onMousedown={e => onmousedown(e, { horizontal: 'end', vertical: 'center' })}></div>
             </>}
 
             {height && <>
-                <div class="block-resize block-resize-top" 
+                <div class="block-resize block-resize-top"
                     onMousedown={e => onmousedown(e, { horizontal: 'center', vertical: 'start' })}></div>
                 <div class="block-resize block-resize-bottom"
-                     onMousedown={e => onmousedown(e, { horizontal: 'center', vertical: 'end' })}></div>
+                    onMousedown={e => onmousedown(e, { horizontal: 'center', vertical: 'end' })}></div>
             </>}
 
             {width && height && <>
-                <div class="block-resize block-resize-top-left" 
+                <div class="block-resize block-resize-top-left"
                     onMousedown={e => onmousedown(e, { horizontal: 'start', vertical: 'start' })}></div>
-                <div class="block-resize block-resize-top-right" 
+                <div class="block-resize block-resize-top-right"
                     onMousedown={e => onmousedown(e, { horizontal: 'end', vertical: 'start' })}></div>
-                <div class="block-resize block-resize-bottom-left" 
+                <div class="block-resize block-resize-bottom-left"
                     onMousedown={e => onmousedown(e, { horizontal: 'start', vertical: 'end' })}></div>
-                <div class="block-resize block-resize-bottom-right" 
+                <div class="block-resize block-resize-bottom-right"
                     onMousedown={e => onmousedown(e, { horizontal: 'end', vertical: 'end' })}
                 ></div>
             </>}

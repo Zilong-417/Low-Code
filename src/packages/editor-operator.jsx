@@ -2,6 +2,7 @@ import { defineComponent, inject, watch, reactive, ref } from "vue";
 import { ElForm, ElFormItem, ElButton, ElInputNumber, ElColorPicker, ElSelect, ElOption, ElInput, ElUpload, ElImage } from 'element-plus'
 import deepcopy from "deepcopy"
 import './editor.scss'
+import { events } from "./events";
 
 export default defineComponent({
     props: {
@@ -18,24 +19,24 @@ export default defineComponent({
         })
 
         let AUDIO = ''
-    //保存视频
-    const updateFace = (e) => {
-      const file = e.target.files[0] || e.dataTransfer.files[0]
+        //保存视频
+        const updateFace = (e) => {
+            const file = e.target.files[0] || e.dataTransfer.files[0]
 
-      // //转换成base64码
-      // let reader = new FileReader()
-      // reader.readAsDataURL(file)
-      // reader.onload = () => {
-      //   AUDIO = reader.result
-      //   console.log(props.data,"block")
-      //   state.editData.props.filePath = AUDIO
-      //   // console.log(AUDIO,'地址')
-      // }
-      let URL = window.URL || window.webkitURL
-      AUDIO = URL.createObjectURL(file)
-      state.editData.props.filePath = AUDIO
-      console.log(state.editData.props,'地址')
-    }
+            // //转换成base64码
+            // let reader = new FileReader()
+            // reader.readAsDataURL(file)
+            // reader.onload = () => {
+            //   AUDIO = reader.result
+            //   console.log(props.data,"block")
+            //   state.editData.props.filePath = AUDIO
+            //   // console.log(AUDIO,'地址')
+            // }
+            let URL = window.URL || window.webkitURL
+            AUDIO = URL.createObjectURL(file)
+            state.editData.props.filePath = AUDIO
+            console.log(state.editData.props, '地址')
+        }
 
         //重置
         const reset = () => {
@@ -51,8 +52,10 @@ export default defineComponent({
             if (!props.block) { // 更改组件容器的大小
                 props.updateContainer({ ...props.data, container: state.editData })
             } else { // 更改组件的配置
-                props.updateBlock(state.editData, props.block)
+                props.updateBlock(state.editData, props.block),
+                    events.emit("blocksize", { ...state.editData })
             }
+            console.log(state.editData)
 
         }
         // 上传成功，获取返回的图片地址
@@ -72,7 +75,6 @@ export default defineComponent({
             }
             return isJPG && isLt2M;
         }
-
         watch(() => props.block, reset, { immediate: true })
         return () => {
             let content = []
@@ -119,16 +121,16 @@ export default defineComponent({
                                         </div>
 
                                     </ElUpload>,
-                                    file:()=> 
+                                file: () =>
                                     <div>
-                                      <input class="file" type="file" accept="video/*" onchange={updateFace}></input>
-                                      {/* <video class="video" src={AUDIO} controls></video> */}
-                                      {/* <button onClick={console.log(AUDIO,'onclick')}>删除视频</button> */}
+                                        <input class="file" type="file" accept="video/*" onchange={updateFace} ></input>
+                                        {/* <video class="video" src={AUDIO} controls></video> */}
+                                        {/* <button onClick={console.log(AUDIO,'onclick')}>删除视频</button> */}
                                     </div>
-                                
+
                             }[propConfig.type]()}
                         </ElFormItem >
-                        
+
                     }))
                 }
                 if (component && component.model) {
@@ -142,10 +144,10 @@ export default defineComponent({
             }
 
 
-            return <ElForm labelPosition="top" style="padding:30px">
+            return <ElForm labelPosition="top" style="padding:30px" >
                 {content}
                 <ElFormItem>
-                    <ElButton type="primary" onClick={() => apply()}>应用</ElButton>
+                    <ElButton type="primary" onClick={() => apply()} >应用</ElButton>
                     <ElButton onClick={reset} >重置</ElButton>
                 </ElFormItem>
             </ElForm>
