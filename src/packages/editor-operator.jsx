@@ -1,4 +1,4 @@
-import { defineComponent, inject, watch, reactive, ref } from "vue";
+import { defineComponent, inject, watch, reactive, provide } from "vue";
 import { ElForm, ElFormItem, ElButton, ElInputNumber, ElColorPicker, ElSelect, ElOption, ElInput, ElUpload, ElImage } from 'element-plus'
 import deepcopy from "deepcopy"
 import './editor.scss'

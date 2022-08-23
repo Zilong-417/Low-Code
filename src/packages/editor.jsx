@@ -7,8 +7,9 @@ import { useFocus } from "./useFocus";
 import { useBlockDragger } from "./useBlockDragger";
 import { useCommand } from "./useCommand";
 import { $dialog } from "../components/Dialog";
-import { ElButton, ElCard } from 'element-plus';
+import { ElButton, ElCard, ElTabs, ElTabPane, ElIcon, ElTooltip } from 'element-plus';
 import EditorOperator from "./editor-operator";
+import EditorEvent from "./editor-event";
 
 export default defineComponent({
     props: {
@@ -23,10 +24,11 @@ export default defineComponent({
     },
     //要触发的事件
     emits: ['update:modelValue'],
+
     setup(props, ctx) {
+        console.log(props.modelValue)
         // 预览的时候 内容不能在操作了 ，可以点击 输入内容 方便看效果
         const previewRef = ref(false);
-
         const data = computed({
             get() {
                 return props.modelValue
@@ -56,6 +58,7 @@ export default defineComponent({
 
         const { commands } = useCommand(data, focusData); // 引入
         const buttons = [
+
             { label: '撤销', handler: () => commands.undo() },
             { label: '还原', handler: () => commands.redo() },
             {
@@ -90,6 +93,14 @@ export default defineComponent({
                         </div>
                     ))}
                 </div>
+                <ElTooltip
+                    class="box-item"
+                    effect="dark"
+                    content="ctrl+y 还原/  ctrl+z 撤销/  shift+左键 多选"
+                    placement="left"
+                >
+                    <ElIcon size={30} class="editor-icon"><InfoFilled /></ElIcon>
+                </ElTooltip>
                 <div class="editor-top">
                     {buttons.map((btn, index) => {
                         const label = typeof btn.label == 'function' ? btn.label() : btn.label
@@ -100,18 +111,38 @@ export default defineComponent({
                 </div>
                 <div class="editor-right">
                     <div class="editor-right-title">
-                        <el-card shadow="never">
-                            <span>画布属性</span>
-                        </el-card>
-                        <el-card shadow="never" class="editor-right-title-box">
-                            <EditorOperator
-                                block={lastSelectBlock.value}
-                                data={data.value}
-                                updateContainer={commands.updateContainer}
-                                updateBlock={commands.updateBlock}
-                                style="padding:0px;"
-                            ></EditorOperator>
-                        </el-card>
+                        {/**根据最后是否有选中组件，选择呈现内容 ElTabPane内不能使用v-show/if */}
+                        <ElTabs type="border-card" stretch={true} v-show={lastSelectBlock.value == undefined}>
+                            <ElTabPane label="画布属性" class="editor-right-title-box">
+                                <EditorOperator
+                                    block={lastSelectBlock.value}
+                                    data={data.value}
+                                    updateContainer={commands.updateContainer}
+                                    updateBlock={commands.updateBlock}
+                                    style="padding:0px;"
+                                ></EditorOperator>
+                            </ElTabPane>
+                        </ElTabs>
+                        <ElTabs type="border-card" stretch={true} v-show={lastSelectBlock.value != undefined}>
+                            <ElTabPane label="属性" class="editor-right-title-box">
+                                <EditorOperator
+                                    block={lastSelectBlock.value}
+                                    data={data.value}
+                                    updateContainer={commands.updateContainer}
+                                    updateBlock={commands.updateBlock}
+                                    style="padding:0px;"
+                                ></EditorOperator>
+                            </ElTabPane>
+                            <ElTabPane label="事件" class="editor-right-title-box">
+                                <EditorEvent
+                                    block={lastSelectBlock.value}
+                                    data={data.value}
+                                    updateBlock={commands.updateBlock}
+                                    style="padding:0px;"
+                                ></EditorEvent>
+                            </ElTabPane>
+                        </ElTabs>
+
                     </div>
                 </div>
                 <div class="editor-container">
@@ -132,7 +163,7 @@ export default defineComponent({
                                     ></editorBlock>
                                 )))
                             }
-
+                            {/*辅助线 */}
                             {markLine.x !== null && <div class="line-x" style={{ left: markLine.x + 'px' }}></div>}
                             {markLine.y !== null && <div class="line-y" style={{ top: markLine.y + 'px' }}></div>}
                         </div>
@@ -160,7 +191,7 @@ export default defineComponent({
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
 
     }
 })

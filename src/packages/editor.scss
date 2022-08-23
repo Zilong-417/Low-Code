@@ -16,6 +16,7 @@
         margin-top: 60px;
         overflow: scroll;
 
+
         &-item {
             width: 250px;
             margin: 20px auto;
@@ -52,12 +53,16 @@
                 opacity: 0.2;
             }
         }
+
+        &-item:nth-child(1) {
+            margin: 0 auto;
+        }
     }
 
     /*右侧栏*/
     &-right {
         right: 0;
-        margin-top: 80px;
+        margin-top: 60px;
 
         &-title {
             text-align: center;
@@ -69,12 +74,19 @@
         }
     }
 
+    &-icon {
+        position: absolute;
+        right: 10px;
+        height: 35px;
+        color: skyblue;
+        cursor: pointer;
+    }
+
     /*上侧栏*/
     &-top {
-        position: absolute;
         right: 280px;
-        left: 280px;
-        height: 70px;
+        left: 240px;
+        height: 30px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -99,7 +111,7 @@
 
     /*中间栏*/
     &-container {
-        padding: 80px 290px 0;
+        padding: 30px 295px 0;
         height: 100%;
         box-sizing: border-box;
 
@@ -282,4 +294,38 @@
     height: 178px;
     display: block;
     cursor: pointer;
+}
+
+/*事件*/
+
+.dialog-font {
+    font-size: 14px;
+    font-weight: 500;
+    float: left;
+}
+
+.el-collapse-item__header {
+    font-size: 14px !important;
+    font-weight: 500;
+}
+
+/* 定义滚动条样式 */
+::-webkit-scrollbar {
+    width: 4px;
+    height: 2px;
+    background-color: rgba(240, 240, 240, 1);
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 0px rgba(240, 240, 240, .5);
+    border-radius: 10px;
+    background-color: rgba(240, 240, 240, .5);
+}
+
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: white;
+    background-color: white;
 }
