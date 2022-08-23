@@ -89,6 +89,10 @@ export default defineComponent({
     ];
     const allColorStyle = [
       {
+        label:'机器',
+        value:['#061D75','#E2E4E7','#878584']
+      },
+      {
         label:'反常',
         value:['#4C5C40','#727989','#D8AE4B']
       },
@@ -102,7 +106,7 @@ export default defineComponent({
       },
       {
         label:'特立独行',
-        value:['#918176','#B07B5C','#C1962E']
+        value:['#154599','#918081','#E5CAB9']
       },
       {
         label:'存活',

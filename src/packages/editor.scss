@@ -4,21 +4,6 @@
     --midColor:#878584;
     --lightColor:#E2E4E7;
 }
-html:has(option[value="1"]:checked){
-    --darkColor:#2F364A;
-    --midColor:#9591A6;
-    --lightColor:#C89A3A;
-}
-html:has(option[value="2"]:checked){
-    --darkColor:#2d54be;
-    --midColor:#941c1c;
-    --lightColor:#C89A3A;
-}
-html:has(option[value="3"]:checked){
-    --darkColor:#d4d7e0;
-    --midColor:#9591A6;
-    --lightColor:#27e0d7;
-}
 
 .editor {
     width: 100%;
