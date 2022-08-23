@@ -1,6 +1,6 @@
 //列表区可以显示所有的物料
 //key对应的组件映射关系
-import { ElButton, ElInput, ElLink, ElIcon, ElUpload } from 'element-plus'
+import { ElButton, ElInput, ElLink, ElIcon } from 'element-plus'
 //默认图片
 const imgdata = require('@/assets/bg.jpg')
 function createEditorConfig() {
@@ -16,25 +16,80 @@ function createEditorConfig() {
         }
     }
 }
+// 自定义事件
+const events = {
+    redirect(url) {
+        if (url) {
+            window.open('https://' + url, '_blank');
+        }
+    },
+
+    alert(msg) {
+        if (msg) {
+            alert(msg)
+        }
+    },
+}
+
+const eventList = [
+    {
+        key: 'redirect',
+        label: 'url事件',
+        title: 'url地址',
+        hint: '请输入完整url地址',
+        event: events.redirect,
+    },
+    {
+        key: 'alert',
+        label: 'alert 事件',
+        title: '弹窗内容',
+        hint: '请输入内容',
+        event: events.alert
+    },
+]
 export let registerConfig = createEditorConfig();
 const createInputProp = (label) => ({ type: 'input', label })//工厂方法，复用
 const createColorProp = (label) => ({ type: 'color', label })
 const createSelectProp = (label, options) => ({ type: 'select', label, options })
 const createAddressProp = (label) => ({ type: 'link', label })
 const createPictureProp = (label) => ({ type: 'picture', label })
-const createFileProp = (label) => ({ type: "file", accept: "video/*", label });
-
+const createFileProp = (label) => ({ type: "file", accept: "video/*", label })
 registerConfig.register({
     lable: '文本',
     preview: () => '预览文本',
-    render: ({ props }) => <span style={{ color: props.color, fontSize: props.size + 'px' }}>{props.text || '文本'}</span>,
+    render({ props, events }) {
+        if (
+            (events.redirect != undefined && events.alert != undefined) ||
+            (events.redirect != undefined && events.alert == undefined) ||
+            (events.redirect == undefined && events.alert != undefined)) {
+            return <span
+                style={{ color: props.color, fontSize: props.size + 'px' }}
+                onClick={() => this.handleClick(events.alert, events.redirect)}
+            >{props.text || '文本'}</span>
+        } else {
+            return <span
+                style={{ color: props.color, fontSize: props.size + 'px' }}
+            >{props.text || '文本'}</span>
+        }
+    },
     key: 'text',
     props: {
         text: createInputProp('文本内容'),
         color: createColorProp('字体颜色'),
-        size: createInputProp('字体大小/px')
+        size: createInputProp('字体大小/px'),
 
+    },
+    events: {
+        ...eventList
+    },
+    handleClick(alert, redirect) {
+        // 循环触发绑定的事件
+        Object.keys(events).forEach(event => {
+            if (event == 'alert') events['alert'](alert)
+            if (event == 'redirect') events['redirect'](redirect)
+        })
     }
+
 })
 
 registerConfig.register({
@@ -44,7 +99,20 @@ registerConfig.register({
         width: true,
         height: true
     },
-    render: ({ props, size }) => <ElButton style={{ height: size.height + 'px', width: size.width + 'px', fontSize: props.fontsize + 'px' }} type={props.type} size={props.size}>{props.text || '按钮'}</ElButton>,
+    render({ props, events, size }) {
+        if (
+            (events.redirect != undefined && events.alert != undefined) ||
+            (events.redirect != undefined && events.alert == undefined) ||
+            (events.redirect == undefined && events.alert != undefined)) {
+            return <ElButton
+                style={{ height: size.height + 'px', width: size.width + 'px', fontSize: props.fontsize + 'px' }}
+                type={props.type}
+                onClick={() => this.handleClick(events.alert, events.redirect)}
+                size={props.size}>{props.text || '按钮'}</ElButton>
+        } else {
+            return <ElButton style={{ height: size.height + 'px', width: size.width + 'px', fontSize: props.fontsize + 'px' }} type={props.type} size={props.size}>{props.text || '按钮'}</ElButton>
+        }
+    },
     key: 'button',
     props: {
         text: createInputProp('按钮内容'),
@@ -61,6 +129,16 @@ registerConfig.register({
             { label: '大', value: 'large' },
             { label: '小', value: 'small' }
         ])
+    },
+    events: {
+        ...eventList
+    },
+    handleClick(alert, redirect) {
+        // 循环触发绑定的事件
+        Object.keys(events).forEach(event => {
+            if (event == 'alert') events['alert'](alert)
+            if (event == 'redirect') events['redirect'](redirect)
+        })
     }
 })
 
@@ -77,13 +155,23 @@ registerConfig.register({
     },
     props: {
         text: createInputProp('提示信息'),
+    },
+    events: {
+        ...eventList
+    },
+    handleClick(alert, redirect) {
+        // 循环触发绑定的事件
+        Object.keys(events).forEach(event => {
+            if (event == 'alert') events['alert'](alert)
+            if (event == 'redirect') events['redirect'](redirect)
+        })
     }
 })
 
 registerConfig.register({
     lable: '链接',
     preview: () => <ElLink>预览链接</ElLink>,
-    render: ({ props, size }) => <ElLink type={props.type} underline={props.underline} disabled={props.disabled} href={'https:' + props.link} target="_blank" style={{ fontSize: props.fontSize + 'px' }}>{props.text || '链接'}</ElLink>,
+    render: ({ props }) => <ElLink type={props.type} underline={props.underline} disabled={props.disabled} href={'https:' + props.link} target="_blank" style={{ fontSize: props.fontSize + 'px' }}>{props.text || '链接'}</ElLink>,
     key: 'link',
     props: {
         text: createInputProp('链接名字'),
@@ -105,6 +193,16 @@ registerConfig.register({
             { label: '是', value: true },
             { label: '否', value: false },
         ]),
+    },
+    events: {
+        ...eventList
+    },
+    handleClick(alert, redirect) {
+        // 循环触发绑定的事件
+        Object.keys(events).forEach(event => {
+            if (event == 'alert') events['alert'](alert)
+            if (event == 'redirect') events['redirect'](redirect)
+        })
     }
 })
 registerConfig.register({
@@ -114,12 +212,25 @@ registerConfig.register({
         height: true
     },
     preview: () => <ElIcon size={30}> <PictureFilled /></ElIcon>,
-    render: ({ props, size }) =>
-        <img
-            src={props.picture ? props.picture : imgdata}
-            class="avatar"
-            style={{ width: (size.width == undefined ? props.width : size.width + 'px'), height: (size.height == undefined ? props.height : size.height + 'px') }}
-        />,
+    render({ props, events, size }) {
+        if (
+            (events.redirect != undefined && events.alert != undefined) ||
+            (events.redirect != undefined && events.alert == undefined) ||
+            (events.redirect == undefined && events.alert != undefined)) {
+            return <img
+                src={props.picture ? props.picture : imgdata}
+                class="avatar"
+                onClick={() => this.handleClick(events.alert, events.redirect)}
+                style={{ width: (size.width == undefined ? props.width : size.width + 'px'), height: (size.height == undefined ? props.height : size.height + 'px') }}
+            />
+        } else {
+            return <img
+                src={props.picture ? props.picture : imgdata}
+                class="avatar"
+                style={{ width: (size.width == undefined ? props.width : size.width + 'px'), height: (size.height == undefined ? props.height : size.height + 'px') }}
+            />
+        }
+    },
     key: 'picture',
     props: {
         height: createSelectProp("图片高度", [
@@ -137,6 +248,16 @@ registerConfig.register({
             { label: "250px", value: "250px" },
         ]),
         picture: createPictureProp('图片导入')
+    },
+    events: {
+        ...eventList
+    },
+    handleClick(alert, redirect) {
+        // 循环触发绑定的事件
+        Object.keys(events).forEach(event => {
+            if (event == 'alert') events['alert'](alert)
+            if (event == 'redirect') events['redirect'](redirect)
+        })
     }
 })
 registerConfig.register({
@@ -176,4 +297,14 @@ registerConfig.register({
         ]),
         filePath: createFileProp("视频导入")
     },
-});
+    events: {
+        ...eventList
+    },
+    handleClick(alert, redirect) {
+        // 循环触发绑定的事件
+        Object.keys(events).forEach(event => {
+            if (event == 'alert') events['alert'](alert)
+            if (event == 'redirect') events['redirect'](redirect)
+        })
+    }
+})

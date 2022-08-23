@@ -21,7 +21,8 @@ export function useMenuDragger(containerRef, data) {
                     key: currentComponent.key,
                     alignCenter: true,
                     props: {},
-                    model: {}
+                    model: {},
+                    events: {}
                 }
             ]
         }

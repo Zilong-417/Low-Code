@@ -16,30 +16,30 @@ export default defineComponent({
 
         const blockRef = ref(null)
         onMounted(() => {
-
-            let { offsetWidth, offsetHeight } = blockRef.value
-            const getblocksize = new Promise((resolve, reject) => {
-                //事件总线，接收数据（选择后的宽高）
-                events.on("blocksize", (msg) => {
-                    resolve(msg)
-                    //console.log(msg)
-                })
-            })
-            getblocksize.then((msg) => {
-                //split截取字符串
-                let pwidth = Number(String(msg.props.width).split('p', 1))
-                let pheight = Number(String(msg.props.height).split('p', 1))
-                props.block.width = pwidth ? pwidth : msg.width
-                props.block.height = pheight ? pheight : msg.height
-            })
-            // console.log(props)
+            console.log(props)
             // console.log(props.block)
-            if (props.block.alignCenter) { // 说明是拖拽松手的时候才渲染的，其他的默认渲染到页面上的内容不需要居中
+            let { offsetWidth, offsetHeight } = blockRef.value
+            if (props.block.alignCenter) { // 拖拽松手的时候才渲染的，其他的默认渲染到页面上的内容不需要居中
                 props.block.left = props.block.left - offsetWidth / 2
                 props.block.top = props.block.top - offsetHeight / 2 // 原则上重新派发事件
                 props.block.alignCenter = false // 让渲染后的结果才能去居中
                 props.block.width = offsetWidth;
                 props.block.height = offsetHeight;
+            } else {
+                const getblocksize = new Promise((resolve, reject) => {
+                    //事件总线，接收数据（选择后的宽高）
+                    events.on("blocksize", (msg) => {
+                        resolve(msg)
+                        console.log(msg)
+                    })
+                })
+                getblocksize.then((msg) => {
+                    //split截取字符串
+                    let pwidth = Number(String(msg.props.width).split('p', 1))
+                    let pheight = Number(String(msg.props.height).split('p', 1))
+                    props.block.width = pwidth ? pwidth : msg.width
+                    props.block.height = pheight ? pheight : msg.height
+                })
             }
         })
         return () => {
@@ -49,6 +49,7 @@ export default defineComponent({
             const RenderComponent = component.render({
                 size: props.block.hasResize ? { width: props.block.width, height: props.block.height } : {},
                 props: props.block.props,
+                events: props.block.events,
                 model: Object.keys(component.model || {}).reduce((prev, modelName) => {
                     let propName = props.block.model[modelName]; // 'username'
                     prev[modelName] = {
