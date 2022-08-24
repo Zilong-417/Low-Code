@@ -49,6 +49,7 @@ const eventList = [
 ]
 export let registerConfig = createEditorConfig();
 const createInputProp = (label) => ({ type: 'input', label })//工厂方法，复用
+const createInputNumProp = (label) => ({ type: 'inputNum', label })
 const createColorProp = (label) => ({ type: 'color', label })
 const createSelectProp = (label, options) => ({ type: 'select', label, options })
 const createAddressProp = (label) => ({ type: 'link', label })
@@ -76,7 +77,7 @@ registerConfig.register({
     props: {
         text: createInputProp('文本内容'),
         color: createColorProp('字体颜色'),
-        size: createInputProp('字体大小/px'),
+        size: createInputNumProp('字体大小/px'),
 
     },
     events: {
@@ -116,7 +117,7 @@ registerConfig.register({
     key: 'button',
     props: {
         text: createInputProp('按钮内容'),
-        fontsize: createInputProp('字体大小/px'),
+        fontsize: createInputNumProp('字体大小/px'),
         type: createSelectProp('按钮类型', [
             { label: '基础', value: 'primary' },
             { label: '成功', value: 'success' },
@@ -176,7 +177,7 @@ registerConfig.register({
     props: {
         text: createInputProp('链接名字'),
         link: createAddressProp('链接地址'),
-        fontSize: createInputProp('字体大小/px'),
+        fontSize: createInputNumProp('字体大小/px'),
         type: createSelectProp('链接类型', [
             { label: '默认', value: 'default' },
             { label: '基础', value: 'primary' },

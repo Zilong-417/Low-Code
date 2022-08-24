@@ -1,6 +1,32 @@
+//自定义主题色
+:root {
+    --darkColor: #061D75;
+    --midColor: #878584;
+    --lightColor: #E2E4E7;
+}
+
+html:has(option[value="1"]:checked) {
+    --darkColor: #2F364A;
+    --midColor: #9591A6;
+    --lightColor: #C89A3A;
+}
+
+html:has(option[value="2"]:checked) {
+    --darkColor: #2d54be;
+    --midColor: #941c1c;
+    --lightColor: #C89A3A;
+}
+
+html:has(option[value="3"]:checked) {
+    --darkColor: #d4d7e0;
+    --midColor: #9591A6;
+    --lightColor: #27e0d7;
+}
+
 .editor {
     width: 100%;
     height: 100%;
+    background-color: var(--darkColor);
 
     &-left,
     &-right {
@@ -13,7 +39,7 @@
     /*左侧栏*/
     &-left {
         left: 0;
-        margin-top: 60px;
+        margin-top: 90px;
         overflow: scroll;
 
 
@@ -23,8 +49,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #fff;
-            border: 1px solid blue;
+            background-color: var(--lightColor);
+            border: 1px solid var(--midColor);
             padding: 20px;
             box-sizing: border-box;
             cursor: move;
@@ -37,7 +63,7 @@
                 position: absolute;
                 top: 0;
                 left: 0;
-                background-color: blue;
+                background-color: var(--midColor);
                 color: #fff;
                 padding: 4px;
             }
@@ -61,24 +87,27 @@
 
     /*右侧栏*/
     &-right {
-        right: 0;
-        margin-top: 60px;
+        right: 10px;
+        margin-top: 90px;
 
         &-title {
             text-align: center;
 
             &-box {
-                height: 550px;
+
+                overflow: scroll;
+                height: 510px;
                 margin-top: 2px;
             }
         }
     }
 
+    /*帮助按钮*/
     &-icon {
         position: absolute;
         right: 10px;
-        height: 35px;
-        color: skyblue;
+        top: 25px;
+        color: var(--midColor);
         cursor: pointer;
     }
 
@@ -86,7 +115,7 @@
     &-top {
         right: 280px;
         left: 240px;
-        height: 30px;
+        height: 80px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -97,7 +126,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: skyblue;
+            background: var(--midColor);
             -webkit-user-select: none;
             user-select: none;
             cursor: pointer;
@@ -111,9 +140,10 @@
 
     /*中间栏*/
     &-container {
-        padding: 30px 295px 0;
-        height: 100%;
+        padding: 10px 295px 0 295px;
+        height: 87%;
         box-sizing: border-box;
+
 
         &-canvas {
             overflow: scroll;
@@ -144,7 +174,7 @@
 /*点击后样式*/
 .editor-block-focus {
     &::after {
-        border: 3px dashed skyblue;
+        border: 3px dashed var(--darkColor);
     }
 }
 
@@ -160,14 +190,14 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    border-left: 1px dashed red;
+    border-left: 2px dashed var(--darkColor);
 }
 
 .line-y {
     position: absolute;
     left: 0;
     right: 0;
-    border-top: 1px dashed red;
+    border-top: 2px dashed var(--darkColor);
 }
 
 /*预览遮罩层*/
@@ -187,7 +217,7 @@
 
     .canvas-container {
         width: calc(100% - 40px);
-        height: calc(100% - 120px);
+        height: calc(100% - 100px);
         overflow: auto;
 
         .canvas {
@@ -313,7 +343,7 @@
 ::-webkit-scrollbar {
     width: 4px;
     height: 2px;
-    background-color: rgba(240, 240, 240, 1);
+    background-color: rgba(240, 240, 240, .5);
 }
 
 /*定义滚动条轨道 内阴影+圆角*/
@@ -328,4 +358,68 @@
     border-radius: 10px;
     box-shadow: white;
     background-color: white;
+}
+
+/*element button样式*/
+.el-button--primary {
+    border: none;
+    background-color: var(--midColor);
+}
+
+.el-button--primary:hover {
+    border: none;
+    background-color: var(--lightColor);
+}
+
+.el-button--danger {
+    border: none;
+    background-color: var(--midColor);
+}
+
+.el-button--danger:hover {
+    border: none;
+    background-color: var(--lightColor);
+}
+
+.el-button.is-plain {
+    --el-button-hover-text-color: var(--darkColor);
+    --el-button-hover-bg-color: var(--lightColor);
+    --el-button-hover-border-color: var(--midColor);
+}
+
+.el-button {
+    --el-button-hover-text-color: var(--darkColor);
+    --el-button-hover-bg-color: var(--lightColor);
+    --el-button-hover-border-color: var(--midColor);
+}
+
+/*主题选择下拉框*/
+.changeColor-select {
+    position: fixed;
+    right: 100px;
+
+    span {
+        color: #fff;
+        padding: 6px;
+        line-height: 32px;
+    }
+
+    select {
+        width: 90px;
+        height: 32px;
+        border: none;
+        border-radius: 4px;
+    }
+
+    option {
+        padding: 10px 0;
+    }
+}
+
+/*校验提示*/
+.showtip {
+    float: left;
+    line-height: 20px;
+    color: red;
+    font-size: 10px;
 }
