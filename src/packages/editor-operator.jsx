@@ -1,5 +1,5 @@
 import { defineComponent, inject, watch, reactive, provide } from "vue";
-import { ElForm, ElFormItem, ElButton, ElInputNumber, ElColorPicker, ElSelect, ElOption, ElInput, ElUpload, ElImage } from 'element-plus'
+import { ElForm, ElFormItem, ElButton, ElInputNumber, ElColorPicker, ElSelect, ElOption, ElInput, ElUpload, ElImage, ElMessage } from 'element-plus'
 import deepcopy from "deepcopy"
 import './editor.scss'
 import { events } from "./events";
@@ -10,7 +10,6 @@ export default defineComponent({
         data: { type: Object }, // 当前所有的数据
         updateContainer: { type: Function },//更改容器的数据
         updateBlock: { type: Function },//更改组件的数据
-
     },
     setup(props, ctx) {
         const config = inject('config')// 组件的配置信息
@@ -75,6 +74,26 @@ export default defineComponent({
             }
             return isJPG && isLt2M;
         }
+        //校验url地址
+        const checkUrl = (urlString) => {
+            var reg = /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?/;
+            if (!reg.test('https://' + urlString)) {
+                props.block.props.correct = false
+            } else {
+                props.block.props.correct = true
+            }
+
+        }
+        //校验数字
+        const isNumber = (val) => {
+            var regPos = /^\d+(\.\d+)?$/;
+            var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/;
+            if (regPos.test(Number(val)) || regNeg.test(Number(val))) {
+                props.block.props.correctNum = true
+            } else {
+                props.block.props.correctNum = false
+            }
+        }
         watch(() => props.block, reset, { immediate: true })
         return () => {
             let content = []
@@ -93,18 +112,45 @@ export default defineComponent({
                     content.push(Object.entries(component.props).map(([propName, propConfig]) => {
                         return <ElFormItem label={propConfig.label}>
                             {{
-                                input: () => <ElInput style="width:400px" v-model={state.editData.props[propName]}></ElInput>,
+                                input: () => (
+                                    <div>
+                                        <ElInput
+                                            style="width:230px"
+                                            v-model={state.editData.props[propName]}
+                                            clearable
+                                        >
+                                        </ElInput>
+                                    </div>),
+                                inputNum: () => (
+                                    <div>
+                                        <ElInput
+                                            style="width:230px"
+                                            v-model={state.editData.props[propName]}
+                                            clearable
+                                            onblur={() => isNumber(state.editData.props[propName])}
+                                        >
+                                        </ElInput>
+                                        <div class="showtip" v-show={props.block.props.correctNum || props.block.props.correctNum == undefined ? false : true}>请输入数字</div>
+                                    </div>),
                                 color: () => <ElColorPicker v-model={state.editData.props[propName]}></ElColorPicker>,
                                 select: () => <ElSelect style="width:400px" v-model={state.editData.props[propName]}>
                                     {propConfig.options.map(opt => {
                                         return <ElOption label={opt.label} value={opt.value}></ElOption>
                                     })}
                                 </ElSelect>,
-                                link: () =>
-                                    <div id="prepend">
-                                        <div>Https://</div>
-                                        <ElInput v-model={state.editData.props[propName]} style="width:180px"></ElInput>
-                                    </div>,
+                                link: () => (
+                                    <div>
+                                        <div id="prepend">
+                                            <div>Https://</div>
+                                            <ElInput
+                                                v-model={state.editData.props[propName]}
+                                                style="width:180px"
+                                                clearable
+                                                onblur={() => checkUrl(state.editData.props[propName])}
+                                            ></ElInput>
+                                        </div>
+                                        <div class="showtip" v-show={props.block.props.correct || props.block.props.correct == undefined ? false : true}>请输入正确的url地址</div>
+                                    </div>),
                                 picture: () =>
                                     <ElUpload
                                         //此处的接口为网上开放接口，已在vue.config.js文件中配置跨域代理

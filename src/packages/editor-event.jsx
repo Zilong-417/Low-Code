@@ -50,10 +50,11 @@ export default defineComponent({
                                         <ElInput type="textarea"
                                             placeholder={propConfig.hint}
                                             v-model={state.editData.events[propConfig.key]}
+                                            onblur={() => checkUrl(state.editData.props[propName])}
                                             disabled={component.lable == '输入框' || component.lable == '链接' || component.lable == '音频播放器' ? true : false}
                                         >
                                         </ElInput>
-                                        <ElFormItem style="padding-top:10px" >
+                                        <ElFormItem style="padding-top:15px; float: left;" >
                                             <ElButton type="primary"
                                                 disabled={component.lable == '输入框' || component.lable == '链接' || component.lable == '音频播放器' ? true : false}
                                                 onClick={() => apply()} >添加</ElButton>
