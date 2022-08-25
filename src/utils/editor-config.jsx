@@ -219,14 +219,14 @@ registerConfig.register({
             (events.redirect != undefined && events.alert == undefined) ||
             (events.redirect == undefined && events.alert != undefined)) {
             return <img
-                src={props.picture ? props.picture : imgdata}
+                src={props.imgPath ? props.imgPath : imgdata}
                 class="avatar"
                 onClick={() => this.handleClick(events.alert, events.redirect)}
                 style={{ width: (size.width == undefined ? props.width : size.width + 'px'), height: (size.height == undefined ? props.height : size.height + 'px') }}
             />
         } else {
             return <img
-                src={props.picture ? props.picture : imgdata}
+                src={props.imgPath ? props.imgPath : imgdata}
                 class="avatar"
                 style={{ width: (size.width == undefined ? props.width : size.width + 'px'), height: (size.height == undefined ? props.height : size.height + 'px') }}
             />

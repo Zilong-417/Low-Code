@@ -18,6 +18,7 @@ export default defineComponent({
         })
 
         let AUDIO = ''
+        let Img = ''
         //保存视频
         const updateFace = (e) => {
             const file = e.target.files[0] || e.dataTransfer.files[0]
@@ -35,6 +36,14 @@ export default defineComponent({
             AUDIO = URL.createObjectURL(file)
             state.editData.props.filePath = AUDIO
             console.log(state.editData.props, '地址')
+        }
+        //保存视频
+        const updateimg = (e) => {
+            const file = e.target.files[0] || e.dataTransfer.files[0]
+            let URL = window.URL || window.webkitURL
+            Img = URL.createObjectURL(file)
+            state.editData.props.imgPath = Img
+            console.log(state.editData.props, '图片地址')
         }
 
         //重置
@@ -152,21 +161,24 @@ export default defineComponent({
                                         <div class="showtip" v-show={props.block.props.correct || props.block.props.correct == undefined ? false : true}>请输入正确的url地址</div>
                                     </div>),
                                 picture: () =>
-                                    <ElUpload
-                                        //此处的接口为网上开放接口，已在vue.config.js文件中配置跨域代理
-                                        action="/dev-api/admin/product/fileUpload"
-                                        show-file-list={false}
-                                        on-success={handleAvatarSuccess}
-                                        before-upload={beforeAvatarUpload}
-                                        v-model={state.editData.props[propName]}
-                                        limit={1}
-                                    >
-                                        <div class="uploader-box">
-                                            <ElImage v-show={state.editData.props['picture']} src={state.editData.props['picture']} class="avatar"></ElImage>
-                                            <ElButton type="success" >{!state.editData.props['picture'] ? '点击上传' : '点击替换'}</ElButton>
-                                        </div>
+                                    // <ElUpload
+                                    //     //此处的接口为网上开放接口，已在vue.config.js文件中配置跨域代理
+                                    //     action="/dev-api/admin/product/fileUpload"
+                                    //     show-file-list={false}
+                                    //     on-success={handleAvatarSuccess}
+                                    //     before-upload={beforeAvatarUpload}
+                                    //     v-model={state.editData.props[propName]}
+                                    //     limit={1}
+                                    // >
+                                    //     <div class="uploader-box">
+                                    //         <ElImage v-show={state.editData.props['picture']} src={state.editData.props['picture']} class="avatar"></ElImage>
+                                    //         <ElButton type="success" >{!state.editData.props['picture'] ? '点击上传' : '点击替换'}</ElButton>
+                                    //     </div>
 
-                                    </ElUpload>,
+                                    // </ElUpload>,
+                                    <div>
+                                        <input class="file" type="file" accept="image/*" onchange={updateimg} ></input>
+                                    </div>,
                                 file: () =>
                                     <div>
                                         <input class="file" type="file" accept="video/*" onchange={updateFace} ></input>
