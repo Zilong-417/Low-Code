@@ -4,8 +4,6 @@
 支持采用图形化拖拽的方式，配置参数来生成JSON，通过JSON渲染可JSONSchema描述的页面。
 ### 在线demo：
 https://zilong-417.github.io/Low-Code
-### 代码介绍
-https://juejin.cn/post/7134722740187037732
 ### 安装
 ```
 yarn install
