@@ -14,17 +14,37 @@ export default {
     Editor
   },
   setup() {
-    const state = ref(data);
-    provide('config', config); // 将组件的配置直接传值
+    var data1 = localStorage.getItem("data");
+    var flag = localStorage.getItem("flag");
+    var obj = JSON.parse(data1);
+    if (flag == null && obj == null) {
+      const state = ref(data);
+      console.log(state)
+      provide('config', config); // 将组件的配置直接传值
+      const formData = ref({
+        username: 'hahaha',
+        password: 123456,
+      })
 
-    const formData = ref({
-      username: 'hahaha',
-      password: 123456,
-    })
+      return {
+        state,
+        formData
+      }
+    }
+    if (flag != null && obj != null) {
+      const data1 = Object.assign(data, obj)
+      const state = ref(data1);
+      console.log(state)
+      provide('config', config); // 将组件的配置直接传值
+      const formData = ref({
+        username: 'hahaha',
+        password: 123456,
+      })
 
-    return {
-      state,
-      formData
+      return {
+        state,
+        formData
+      }
     }
   }
 }

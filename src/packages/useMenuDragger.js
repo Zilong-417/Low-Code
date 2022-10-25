@@ -2,7 +2,7 @@ import { events } from "./events";
 export function useMenuDragger(containerRef, data) {
     let currentComponent = null
     const dragenter = (e) => {
-        e.dataTransfer.dropEffect = 'move'
+        e.dataTransfer.dropEffect = 'move'//h5拖动的图标
     }
     const dragover = (e) => {
         e.preventDefault()
