@@ -156,7 +156,18 @@ html:has(option[value="3"]:checked) {
             }
         }
     }
+
+    @media only screen and (max-width:1000px) {
+        &-right {
+            display: none;
+        }
+
+        &-container {
+            padding: 10px 0px 0 295px;
+        }
+    }
 }
+
 
 .editor-block {
     position: absolute;
@@ -339,6 +350,7 @@ html:has(option[value="3"]:checked) {
     font-weight: 500;
 }
 
+/*谷歌浏览器兼容*/
 /* 定义滚动条样式 */
 ::-webkit-scrollbar {
     width: 4px;
@@ -358,6 +370,12 @@ html:has(option[value="3"]:checked) {
     border-radius: 10px;
     box-shadow: white;
     background-color: white;
+}
+
+/*火狐浏览器兼容*/
+* {
+    scrollbar-color: light;
+    scrollbar-width: none;
 }
 
 /*element button样式*/

@@ -80,13 +80,43 @@ export function useCommand(data, focusData) {
             }
         }
     })
+    registry({//保存操作
+        name: 'save',
+        execute(data) {
+            return {
+                redo: () => {
+                    ElMessage({
+                        showClose: true,
+                        message: '保存成功!',
+                        type: 'success',
+                    })
+                    localStorage.setItem("data", data)
+                    localStorage.setItem("flag", true)
+                }
+            }
+        }
+    })
     registry({ // 如果希望将操作放到队列中可以增加一个属性 标识等会操作要放到队列中
         name: 'drag',
         pushQueue: true,
         init() { // 初始化操作 默认就会执行
+            var data1 = localStorage.getItem("data");
+            var flag = localStorage.getItem("flag");
+            var obj = JSON.parse(data1);
             this.before = null
             // 监控拖拽开始事件，保存状态
             const start = () => {
+                // if (flag == null && obj == null) {
+                //     this.before = deepcopy(data.value.blocks)
+                //     flag = false
+                // }
+                // if (flag == 'false' && obj == null) {
+                //     this.before = deepcopy(data.value.blocks)
+                //     flag = false
+                // }
+                // if (flag == 'true' && obj != null) {
+                //     this.before = deepcopy(obj.blocks)
+                // }
                 this.before = deepcopy(data.value.blocks)
             }
             // 拖拽之后需要触发对应的指令
@@ -183,6 +213,7 @@ export function useCommand(data, focusData) {
         name: 'updateContainer', // 更新整个容器
         pushQueue: true,
         execute(newValue) {
+
             let state = {
                 before: data.value, // 当前的值
                 after: newValue // 新值
@@ -192,6 +223,18 @@ export function useCommand(data, focusData) {
                     data.value = state.after
                 },
                 undo: () => {
+                    // if (flag == null && obj == null) {
+                    //     data.value = state.before
+                    //     flag = false
+                    // }
+                    // else if (flag == 'false' && obj == null) {
+                    //     data.value = state.before
+                    //     flag = false
+                    // }
+                    // else if (flag == 'true' && obj != null) {
+                    //     data.value = obj
+                    //     flag = false
+                    // }
                     data.value = state.before
                 }
             }

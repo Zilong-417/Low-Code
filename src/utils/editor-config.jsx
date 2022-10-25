@@ -4,8 +4,8 @@ import { ElButton, ElInput, ElLink, ElIcon } from 'element-plus'
 //默认图片
 const imgdata = require('@/assets/bg.jpg')
 function createEditorConfig() {
-    const componentList = []
-    const componentMap = {}
+    const componentList = []//组件列表
+    const componentMap = {}//列表映射关系
     return {
         componentList,
         componentMap,
@@ -48,6 +48,7 @@ const eventList = [
     },
 ]
 export let registerConfig = createEditorConfig();
+console.log(registerConfig)
 const createInputProp = (label) => ({ type: 'input', label })//工厂方法，复用
 const createInputNumProp = (label) => ({ type: 'inputNum', label })
 const createColorProp = (label) => ({ type: 'color', label })

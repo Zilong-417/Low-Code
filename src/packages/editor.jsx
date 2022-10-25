@@ -12,9 +12,10 @@ import EditorOperator from "./editor-operator";
 import EditorEvent from "./editor-event";
 
 export default defineComponent({
+    //接收App.vue v-model双向绑定值
     props: {
         modelValue: { type: Object },
-        formData: { type: Object }
+        formData: { type: Object },
     },
     components: {
         editorBlock,
@@ -82,6 +83,10 @@ export default defineComponent({
                     previewRef.value = !previewRef.value;
                     clearBlockFocus();
                 }
+
+            },
+            {
+                label: '保存', handler: () => commands.save(JSON.stringify(data.value))
             },
         ]
         //主题色
